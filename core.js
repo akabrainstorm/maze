@@ -3,6 +3,7 @@ var ctx = canvas.getContext('2d');
 
 var w = document.getElementById('w');
 var h = document.getElementById('h');
+var s = document.getElementById('s');
 
 var rows = [];
 var size = 20;
@@ -98,8 +99,9 @@ function isDone() {
     return true;
 }
 
+var speed = 0.2;
 var lastframe = 0;
-var timeForAnimate = 0.2;
+var timeForAnimate = speed;
 var stack = [];
 var animating = false;
 
@@ -109,7 +111,7 @@ function animate(timestamp) {
     timeForAnimate -= dt;
 
     if (timeForAnimate <= 0) {
-        timeForAnimate = 0.2;
+        timeForAnimate = 1 / speed;
         var neighbors = getNeighbors(current.x, current.y);
         if (neighbors.length > 0) {
             var neighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -136,15 +138,6 @@ function animate(timestamp) {
         }
         ctx.fillStyle = "#00ff00";
         ctx.fillRect(current.x * size+5, current.y * size+5, 10, 10);
-        /*for (var y = 0; y < rows.length; y++) {
-            var row = rows[y];
-            for (var x = 0; x < row.length; x++) {
-                var cell = row[x];
-                if (!cell.visited) continue;
-                ctx.fillStyle = "red";
-                ctx.fillRect(x * size + 5, y * size + 5, 10, 10);
-            }
-        }*/
     }
     requestAnimationFrame(animate);
 }
@@ -155,6 +148,8 @@ function start() {
 
     width = w.valueAsNumber;
     height = h.valueAsNumber;
+    speed = s.valueAsNumber;
+    timeForAnimate = 1 / speed;
 
     init();
     current.x = 0;
